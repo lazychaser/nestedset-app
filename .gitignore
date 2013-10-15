@@ -2,6 +2,7 @@
 /vendor
 /public/packages
 !/public/packages/.gitkeep
+/app/config/local
 composer.phar
 composer.lock
 .DS_Store

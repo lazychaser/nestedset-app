@@ -1,0 +1,62 @@
+<?php namespace Kalnoy;
+
+use Composer\Script\Event;
+
+class ComposerScripts {
+    
+    /**
+     * Run post install commands.
+     *
+     * @param  Event  $event
+     *
+     * @return void
+     */
+    public static function postInstall(Event $event)
+    {
+        if ($event->isDevMode()) 
+        {
+            self::generateIdeHelper();
+        }
+    }
+
+    /**
+     * Run post update commands.
+     *
+     * @param  Event  $event
+     *
+     * @return void
+     */
+    public static function postUpdate(Event $event)
+    {
+        if ($event->isDevMode()) 
+        {
+            self::generateIdeHelper();
+
+            shell_exec("php artisan debugbar:publish");
+        }
+        else
+        {
+            self::cleanup();
+        }
+    }
+
+    /**
+     * Generate IDE helper file.
+     *
+     * @return void
+     */
+    protected static function generateIdeHelper()
+    {
+        shell_exec("php artisan ide-helper:generate -M");
+    }
+
+    /**
+     * Cleanup stuff.
+     *
+     * @return void
+     */
+    protected static function cleanup()
+    {
+        
+    }
+}

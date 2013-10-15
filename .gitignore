@@ -1,5 +1,7 @@
 /bootstrap/compiled.php
 /vendor
+/public/packages
+!/public/packages/.gitkeep
 composer.phar
 composer.lock
 .DS_Store

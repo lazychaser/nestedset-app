@@ -3,6 +3,11 @@
 class Page extends \Kalnoy\Nestedset\Node {
 	protected $fillable = array('slug', 'title', 'body', 'parent_id');
     
+    /**
+     * The validation rules.
+     *
+     * @var array
+     */
 	public static $rules = array(
         'title'       => 'required',
         'slug'        => 'required|regex:/^[a-z0-9\-\/]+$/',
@@ -10,6 +15,25 @@ class Page extends \Kalnoy\Nestedset\Node {
         'parent_id'   => 'required|exists:pages',
     );
 
+    /**
+     * Apply some processing for an input.
+     *
+     * @param  array  $data
+     *
+     * @return array
+     */
+    public function preprocessData(array $data)
+    {
+        if (isset($data['slug'])) $data['slug'] = strtolower($data['slug']);
+
+        return $data;
+    }
+
+    /**
+     * Perform validation.
+     *
+     * @return \Illuminate\Support\MessageBag|true
+     */
     public function validate()
     {
         $rules = self::$rules;
@@ -21,10 +45,14 @@ class Page extends \Kalnoy\Nestedset\Node {
         return $validator->fails() ? $validator->messages() : true;
     }
 
+    /**
+     * Get the contents.
+     *
+     * @return \Kalnoy\Nestedset\Collection
+     */
     public function getContents()
     {
-        Debugbar::startMeasure(__FUNCTION__);
-
+        // The source of contents is the top page not including the root.
         $source = $this->parent_id == 1 
             ? $this 
             : $this->ancestors()->withoutRoot()->first();
@@ -35,39 +63,43 @@ class Page extends \Kalnoy\Nestedset\Node {
             ->get()
             ->toTree();
 
-        Debugbar::stopMeasure(__FUNCTION__);
-
         return $contents;
     }
 
+    /**
+     * Get the page that is immediately after current page.
+     * 
+     * @param array $columns 
+     * 
+     * @return Page|null
+     */
     public function getNext(array $columns = array('slug', 'title'))
     {
-        Debugbar::startMeasure(__FUNCTION__);
-
         $result = $this->newQuery()
             ->select($columns)
             ->where(static::LFT, '>', $this->_lft)
             ->where('parent_id', '<>', 1)
             ->first();
 
-        Debugbar::stopMeasure(__FUNCTION__);
-
         return $result;
     }
 
+    /**
+     * Get the page that is immediately before current page.
+     * 
+     * @param array $columns 
+     * 
+     * @return Page|null
+     */
     public function getPrev(array $columns = array('slug', 'title'))           
     {
         if ($this->isRoot() || $this->parent_id == 1) return null;
-
-        Debugbar::startMeasure(__FUNCTION__);
 
         $result = $this->newQuery()
             ->select($columns)
             ->where(static::LFT, '<', $this->_lft)
             ->reversed()
             ->first();
-
-        Debugbar::stopMeasure(__FUNCTION__);
 
         return $result;
     }

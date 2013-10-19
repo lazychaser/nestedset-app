@@ -2,26 +2,15 @@
 
 use Illuminate\Support\Collection;
 
-function render_contents(array $data)
-{
-    if (empty($data)) return '';
-
-    $html = '<ul class="nav">';
-
-    foreach ($data as $item) {
-        $html .= '<li';
-
-        if (isset($item['active']) && $item['active']) $html .= ' class="active"';
-
-        $html .= '><a href="'.$item['url'].'">';
-        $html .= e($item['label']).'</a>';
-        if (isset($item['items'])) $html .= render_contents($item['items']);
-        $html .= '</li>';
-    }   
-
-    return $html.'</ul>';
-}
-
+/**
+ * Convert tree of nodes in an array appropriate for HTML::nav().
+ *
+ * @param  \Illuminate\Support\Collection $tree
+ * @param  Page       $activePage
+ * @param  boolean     $active
+ *
+ * @return array
+ */
 function make_contents(Collection $tree, Page $activePage, &$active = null)
 {
     if (!$tree->count()) return null;

@@ -29,7 +29,8 @@
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",
-			"app/tests/TestCase.php"
+			"app/tests/TestCase.php",
+            "app/lib"
 		],
 
 		"psr-0": {
@@ -53,9 +54,7 @@
 			"php artisan optimize"
 		],
 		"post-create-project-cmd": [
-			"php artisan key:generate",
-			"php artisan guard:make",
-			"php artisan config:publish way/guard-laravel"
+			"php artisan key:generate"
 		]
 	},
 	"config": {

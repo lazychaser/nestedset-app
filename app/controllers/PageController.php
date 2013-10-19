@@ -2,7 +2,10 @@
 
 use dflydev\markdown\MarkdownParser;
 
-class HomeController extends BaseController {
+/**
+ * This controller is used to display pages.
+ */
+class PageController extends BaseController {
 
 	public $layout = 'layouts.front';
 
@@ -35,7 +38,7 @@ class HomeController extends BaseController {
 	 *
 	 * @return  mixed
 	 */
-	public function showPage($slug = '/')
+	public function show($slug = '/')
 	{
 		$page = $this->page->whereSlug($slug)->first();
 
@@ -44,7 +47,7 @@ class HomeController extends BaseController {
 			App::abort(404, 'Sorry, but requested page doesn\'t exists.');
 		}
 
-		return $this->displayPage($page);
+		return $this->displayPage($page, $slug == '/' ? 'home.index' : 'home.page');
 	}
 
 	/**
@@ -54,11 +57,11 @@ class HomeController extends BaseController {
 	 *
 	 * @return  \Illuminate\View\View
 	 */
-	protected function displayPage(Page $page)
+	protected function displayPage(Page $page, $view = 'home.page')
 	{
 		$page->body = $this->markdown->transformMarkdown($page->body);
 
-		$content = View::make('home.page', compact('page'));
+		$content = View::make($view, compact('page'));
 
 		if (!$page->isRoot())
 		{
@@ -72,6 +75,7 @@ class HomeController extends BaseController {
         return $this->layout
         	->withTitle($page->title)
         	->withBreadcrumbs($this->getBreadcrumbs($page))
+        	->withMenu($this->getMenu($page))
         	->withContent($content);
 	}
 
@@ -93,13 +97,13 @@ class HomeController extends BaseController {
 		Debugbar::startMeasure('breadcrumbs');
 
 		$breadcrumbs['Index'] = url('/');
-		$ancestors = $page->ancestors()->select('id', 'title')->withoutRoot()->get();
+		$ancestors = $page->ancestors()->select('id', 'title', 'slug')->withoutRoot()->get();
 
 		if ($active !== null) $ancestors->push($page);
 
 		foreach ($ancestors as $item) 
 		{
-			$breadcrumbs[$item->title] = route($route, array('slug' => $item->slug));
+			$breadcrumbs[$item->title] = route($route, array($item->slug));
 		}
 
 		$breadcrumbs[] = $active !== null ? $active : $page->title;
@@ -114,36 +118,19 @@ class HomeController extends BaseController {
 	 *
 	 * @return  array
 	 */
-	protected function getMenu()
+	protected function getMenu(Page $activePage)
 	{
 		Debugbar::startMeasure('menu');
 
 		$items = $this->page
-			->select('slug', 'title', '_lft', 'parent_id')
-			->withoutRoot()
-			->withDepth()
-			->having('depth', '<=', 2)
-			->get()
-			->toTree()
-			->toArray();
+			->select('id', 'slug', 'title', '_lft', 'parent_id')
+			->where('parent_id', '=', 1)
+			->get();
+
+		$items = make_contents($items->toTree(), $activePage);
 
 		Debugbar::stopMeasure('menu');
 
 		return $items;
-	}
-
-	/**
-	 * Setup layout.
-	 *
-	 * @return  void
-	 */
-	protected function setupLayout()
-	{
-		parent::setupLayout();
-
-		if (is_object($this->layout))
-		{
-        	$this->layout->with('menu', $this->getMenu());	
-		}
 	}
 }

@@ -40,3 +40,16 @@ body {
 .form-actions {
     margin-top: 30px;
 }
+
+.table-pages .f-title { width: 30%; }
+.table-pages .f-title .glyphicon { 
+    display: none; 
+    margin-left: 5px; 
+    text-decoration: none;
+    font-size: 12px;
+}
+.table-pages .f-title a:hover .glyphicon { display: inline-block; }
+
+.table-pages .f-actions {
+    text-align: center;
+}

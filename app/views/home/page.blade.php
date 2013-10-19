@@ -3,9 +3,7 @@
     <aside class="col-md-4">
         <section class="panel panel-default">
             <header class="panel-heading"><h3 class="panel-title">Contents</h3></header>
-            <div class="panel-body">
-                {{ render_contents($contents) }}
-            </div>
+            <div class="panel-body">{{ HTML::nav($contents) }}</div>
         </section>
     </aside>
 @endif

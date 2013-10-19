@@ -11,4 +11,4 @@
 |
 */
 
-App::attachDebugger();
+// App::attachDebugger();

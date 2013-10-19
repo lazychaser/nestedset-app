@@ -1,4 +1,6 @@
-<table class="table table-bordered table-hover">
+<p class="alert alert-info">Click on a <em>title</em> to edit a page. Click on a slug to view a page.</p>
+
+<table class="table table-bordered table-hover table-condensed table-pages">
     <thead>
         <tr>
             <th>#</th>
@@ -14,39 +16,46 @@
     @foreach ($pages as $item)
         <tr>
             <td>{{ $item->id }}</td>
-            <td>{{ str_repeat('<span class="space"></span>', $item->depth).e($item->title) }}</td>
+            <td class="f-title">{{ str_repeat('<span class="space"></span>', $item->depth) }}<a href="{{ route('pages.edit', array('pages' => $item->id)) }}">{{{ $item->title}}}{{ HTML::glyphicon('edit') }}</a></td>
             <td>
             @if ($item->slug)
-                <a href="{{ route('page', array('slug' => $item->slug)) }}">{{ $item->slug }}</a>
+                <a href="{{ route('page', array('slug' => $item->slug)) }}" target="_blanc">{{ $item->slug }}</a>
             @endif
             </td>
             <td>{{ $item->updated_at }}</td>
-            <td>
-                <a href="{{ route('pages.edit', array('pages' => $item->id)) }}" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            <td class="f-actions">
+            @if ($item->isRoot())
+                <a href="{{ URL::route('pages.export') }}" class="btn btn-xs">{{ HTML::glyphicon('floppy-save') }} export</a>
+            @else
+                <div class="btn-group">
+                @foreach (array('up', 'down') as $key)
+                    <button class="btn btn-xs btn-link" type="submit" title="Destroy" form="form-post" formaction="{{ URL::route("pages.$key", array($item->id)) }}">
+                        {{ HTML::glyphicon("arrow-$key") }}
+                    </button>
+                @endforeach
 
-            @if (!$item->isRoot())
-                <button class="btn btn-link" type="submit" form="destroy{{ $item->id }}" title="Destroy">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-
-                {{ Form::open(array(
-                    'route' => array('pages.destroy', 'pages' => $item->id), 
-                    'method' => 'delete',
-                    'id' => 'destroy'.$item->id,
-                )) }}
-                {{ Form::close() }}
+                    <button class="btn btn-xs btn-link" type="submit" title="Destroy" form="form-delete" formaction="{{ URL::route('pages.destroy', array($item->id)) }}">
+                        {{ HTML::glyphicon('trash') }}
+                    </button>
+                </div>
             @endif
             </td>
         </tr>
     @endforeach
 @else
-        <tr><td colspan="5" class="text-info">No items found.</td></tr>
+        <tr><td colspan="5" class="text-info text-center">No items found.</td></tr>
 @endif
     </tbody>
 
     <tfoot>
         <tr>
-            <td colspan="5" class="text-center"><a href="{{ route('pages.create') }}"><i class="icon-plus"></i> Create a page</a></td>
+            <td colspan="5" class="text-center"><a href="{{ route('pages.create') }}" class="btn"><i class="icon-plus"></i> Create a page</a></td>
         </tr>
     </tfoot>
 </table>
+
+{{-- This form is used for general post requests --}}
+{{ Form::open(array('method' => 'post', 'id' => 'form-post')) }}{{ Form::close() }}
+
+{{-- This form is used to destroy pages --}}
+{{ Form::open(array('method' => 'delete', 'id' => 'form-delete')) }}{{ Form::close() }}

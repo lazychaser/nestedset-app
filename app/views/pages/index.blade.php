@@ -29,7 +29,7 @@
             @else
                 <div class="btn-group">
                 @foreach (array('up', 'down') as $key)
-                    <button class="btn btn-xs btn-link" type="submit" title="Destroy" form="form-post" formaction="{{ URL::route("pages.$key", array($item->id)) }}">
+                    <button class="btn btn-xs btn-link" type="submit" title="Move {{$key}}" form="form-post" formaction="{{ URL::route("pages.$key", array($item->id)) }}">
                         {{ HTML::glyphicon("arrow-$key") }}
                     </button>
                 @endforeach

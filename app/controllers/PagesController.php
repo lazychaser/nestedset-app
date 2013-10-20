@@ -203,9 +203,9 @@ class PagesController extends BaseController {
 
 		if (!$page->isRoot())
 		{
-			$sibling = $direction == 'before' 
-				? $page->prevSiblings()->reversed()->first()
-				: $page->nextSiblings()->first();
+			$sibling = $direction === 'before' 
+				? $page->getPrevSibling()
+				: $page->getNextSibling();
 
 			if ($sibling)
 			{

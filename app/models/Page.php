@@ -75,9 +75,8 @@ class Page extends \Kalnoy\Nestedset\Node {
      */
     public function getNext(array $columns = array('slug', 'title'))
     {
-        $result = $this->newQuery()
+        $result = $this->next()
             ->select($columns)
-            ->where(static::LFT, '>', $this->_lft)
             ->where('parent_id', '<>', 1)
             ->first();
 
@@ -95,10 +94,9 @@ class Page extends \Kalnoy\Nestedset\Node {
     {
         if ($this->isRoot() || $this->parent_id == 1) return null;
 
-        $result = $this->newQuery()
+        $result = $this->prev()
             ->select($columns)
             ->where(static::LFT, '<', $this->_lft)
-            ->reversed()
             ->first();
 
         return $result;

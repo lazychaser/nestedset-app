@@ -269,7 +269,7 @@ class PagesController extends BaseController {
 	/**
 	 * Save model in transaction.
 	 *
-	 * @param  Eloquent $model
+	 * @param  Page $model
 	 *
 	 * @return boolean
 	 */

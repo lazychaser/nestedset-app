@@ -38,7 +38,7 @@ class Page extends \Kalnoy\Nestedset\Node {
     {
         $rules = self::$rules;
 
-        if ($this->isRoot()) unset($rules['parent_id']);
+        if ($this->exists && $this->isRoot()) unset($rules['parent_id']);
 
         $validator = Validator::make($this->attributes, $rules);
 

@@ -10,9 +10,9 @@ class Page extends \Kalnoy\Nestedset\Node {
      */
 	public static $rules = array(
         'title'       => 'required',
-        'slug'        => 'required|regex:/^[a-z0-9\-\/]+$/',
+        'slug'        => 'required|regex:/^[a-z0-9\-\/]+$/|unique:pages',
         'body'        => 'required',
-        'parent_id'   => 'required|exists:pages',
+        'parent_id'   => 'required|exists:pages,id',
     );
 
     /**

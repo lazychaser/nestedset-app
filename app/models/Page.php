@@ -1,19 +1,8 @@
 <?php
 
 class Page extends \Kalnoy\Nestedset\Node {
+
 	protected $fillable = array('slug', 'title', 'body', 'parent_id');
-    
-    /**
-     * The validation rules.
-     *
-     * @var array
-     */
-	public static $rules = array(
-        'title'       => 'required',
-        'slug'        => 'required|regex:/^[a-z0-9\-\/]+$/|unique:pages',
-        'body'        => 'required',
-        'parent_id'   => 'required|exists:pages,id',
-    );
 
     /**
      * Apply some processing for an input.
@@ -36,13 +25,36 @@ class Page extends \Kalnoy\Nestedset\Node {
      */
     public function validate()
     {
-        $rules = self::$rules;
+        $v = Validator::make($this->attributes, $this->getRules());
 
-        if ($this->exists && $this->isRoot()) unset($rules['parent_id']);
+        return $v->fails() ? $v->messages() : true;
+    }
 
-        $validator = Validator::make($this->attributes, $rules);
+    /**
+     * Get validation rules.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        $rules = array(
+            'title' => 'required',
+            
+            'slug'  => array(
+                'required',
+                'regex:/^[a-z0-9\-\/]+$/',
+                'unique:pages'.($this->exists ? ',slug,'.$this->id : ''),
+            ),
 
-        return $validator->fails() ? $validator->messages() : true;
+            'body'  => 'required',
+        );
+
+        if ($this->exists && $this->isRoot())
+        {
+            $rules['parent_id'] = 'required|exists:pages,id';
+        }
+
+        return $rules;
     }
 
     /**

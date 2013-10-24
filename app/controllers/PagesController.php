@@ -138,6 +138,31 @@ class PagesController extends BaseController {
 	}
 
 	/**
+	 * Display destroy confirmation.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function confirm($id)
+	{
+		$this->setupLayout();
+
+		$page = $this->page->findOrFail($id);
+
+		$message = "Are you shure to destroy {$page->title}?";
+
+		if ($page->getDescendantCount())
+		{
+			$message .= " All descendants will also be destroyed!";
+		}
+
+		return $this->layout
+			->withTitle('Confirm destroy')
+			->nest('content', 'pages.confirm', compact('message', 'page'));
+	}
+
+	/**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
@@ -153,11 +178,11 @@ class PagesController extends BaseController {
 
 			if ($page->delete()) 
 			{
-				$response->withSuccess('The page has been removed!');
+				$response->withSuccess('The page has been destroyed!');
 			}
 			else
 			{
-				$response->withWarning('The page was not removed.');
+				$response->withWarning('The page was not destroyed.');
 			}
 
 			return $response;

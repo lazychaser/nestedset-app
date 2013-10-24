@@ -34,9 +34,9 @@
                     </button>
                 @endforeach
 
-                    <button class="btn btn-xs btn-link" type="submit" title="Destroy" form="form-delete" formaction="{{ URL::route('pages.destroy', array($item->id)) }}">
+                    <a class="btn btn-xs" type="submit" title="Destroy" href="{{ URL::route('pages.confirm', array($item->id)) }}">
                         {{ HTML::glyphicon('trash') }}
-                    </button>
+                    </a>
                 </div>
             @endif
             </td>
@@ -56,6 +56,3 @@
 
 {{-- This form is used for general post requests --}}
 {{ Form::open(array('method' => 'post', 'id' => 'form-post')) }}{{ Form::close() }}
-
-{{-- This form is used to destroy pages --}}
-{{ Form::open(array('method' => 'delete', 'id' => 'form-delete')) }}{{ Form::close() }}

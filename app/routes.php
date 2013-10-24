@@ -25,7 +25,15 @@ Route::group(array('prefix' => 'pages'), function () {
         ));
     }
 
-    Route::get('export', array('as' => 'pages.export', 'uses' => 'PagesController@export'));
+    Route::get('export', array(
+        'as' => 'pages.export', 
+        'uses' => 'PagesController@export',
+    ));
+
+    Route::get('{pages}/confirm', array(
+        'as' => 'pages.confirm', 
+        'uses' => 'PagesController@confirm',
+    ));
 });
 
 

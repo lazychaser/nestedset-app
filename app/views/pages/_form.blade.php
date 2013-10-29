@@ -8,7 +8,10 @@
 {{ Form::beginGroup('slug') }}
     {{ Form::label('slug', 'Slug', array('class' => 'col-lg-2 control-label')) }}
     <div class="col-lg-10">
-        {{ Form::text('slug', null, array('class' => 'form-control', 'required' => true)) }}
+        <div class="input-group">
+            <span class="input-group-addon">{{ Request::root().'/' }}</span>
+            {{ Form::text('slug', null, array('class' => 'form-control', 'required' => true)) }}
+        </div>
         <span class="help-block">This one accepts only letters, numbers, dash and slash, i.e. "docs/installation".</span>
     </div>
 {{ Form::endGroup('slug') }}

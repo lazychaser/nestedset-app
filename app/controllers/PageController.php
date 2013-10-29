@@ -66,7 +66,7 @@ class PageController extends BaseController {
 		if (!$page->isRoot())
 		{
 			$content->with(array(
-				'contents' => make_contents($page->getContents(), $page),
+				'contents' => make_nav($page->getContents(), $page->getKey()),
 				'next' => $page->getNext(),
 				'prev' => $page->getPrev(),
 			));
@@ -127,7 +127,7 @@ class PageController extends BaseController {
 			->where('parent_id', '=', 1)
 			->get();
 
-		$items = make_contents($items->toTree(), $activePage);
+		$items = make_nav($items->toTree(), $activePage->getKey());
 
 		Debugbar::stopMeasure('menu');
 

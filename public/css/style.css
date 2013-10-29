@@ -41,15 +41,36 @@ body {
     margin-top: 30px;
 }
 
-.table-pages .f-title { width: 30%; }
-.table-pages .f-title .glyphicon { 
-    display: none; 
+.page-list .f-title { width: 30%; }
+.page-list .f-title .glyphicon { 
     margin-left: 5px; 
     text-decoration: none;
     font-size: 12px;
 }
-.table-pages .f-title a:hover .glyphicon { display: inline-block; }
 
-.table-pages .f-actions {
+.page-list .f-date,
+.page-list .f-actions {
     text-align: center;
+    white-space: nowrap;
+    width: 1%;
 }
+
+.page-list .f-date {
+    font-size: 12px;
+}
+
+.page-list .actions
+, .page-list .f-title .glyphicon {
+    opacity: 0;
+
+    -webkit-transition: opacity .1s ease-in-out;
+       -moz-transition: opacity .1s ease-in-out;
+        -ms-transition: opacity .1s ease-in-out;
+         -o-transition: opacity .1s ease-in-out;
+            transition: opacity .1s ease-in-out;
+}
+
+    .page-list .item:hover .actions
+    , .page-list .item:hover .f-title .glyphicon {
+        opacity: 1;
+    }

@@ -113,4 +113,24 @@ class Page extends \Kalnoy\Nestedset\Node {
 
         return $result;
     }
+
+    /**
+     * Get url for navigation.
+     *
+     * @return  string
+     */
+    public function getNavUrl()
+    {
+        return URL::route('page', array($this->attributes['slug']));
+    }
+
+    /**
+     * Get navigation item label.
+     *
+     * @return  string
+     */
+    public function getNavLabel()
+    {
+        return $this->title;
+    }
 }

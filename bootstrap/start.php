@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('nestedset.dev'),
+	'local' => array('lazychaser-eMachines-E510'),
 
 ));
 

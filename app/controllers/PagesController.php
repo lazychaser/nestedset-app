@@ -13,17 +13,9 @@ class PagesController extends BaseController {
 	 */	
 	protected $page;
 
-	/**
-	 * Markdown parser.
-	 *
-	 * @var  MarkdownParser
-	 */
-	protected $markdown;
-
-	public function __construct(Page $page, MarkdownParser $markdown)
+	public function __construct(Page $page)
 	{
 		$this->page = $page;
-		$this->markdown = $markdown;
 	}
 
 	/**
@@ -78,7 +70,7 @@ class PagesController extends BaseController {
 			}
 
 			return Redirect::route('pages.create')
-				->withError('Something went wrong saving the page.')
+				->withError('Something went wrong while saving the page.')
 				->withInput($data);
 		}
 
@@ -217,24 +209,22 @@ class PagesController extends BaseController {
 	 * Move the page.
 	 *
 	 * @param  int $id
-	 * @param  'before'|'after' $direction
+	 * @param  'before'|'after' $dir
 	 *
 	 * @return Response
 	 */
-	protected function move($id, $direction)
+	protected function move($id, $dir)
 	{
 		$page = $this->page->findOrFail($id);
 		$response = Redirect::route('pages.index');
 
 		if (!$page->isRoot())
 		{
-			$sibling = $direction === 'before' 
-				? $page->getPrevSibling()
-				: $page->getNextSibling();
+			$sibling = $dir === 'before' ? $page->getPrevSibling() : $page->getNextSibling();
 
 			if ($sibling)
 			{
-				$page->$direction($sibling);
+				$page->$dir($sibling);
 
 				if ($this->saveSafely($page))
 				{
@@ -302,7 +292,7 @@ class PagesController extends BaseController {
 	{
 		$connection = $model->getConnection();
 
-		return $connection->transaction(function () use($model) 
+		return $connection->transaction(function () use ($model) 
 		{
 			return $model->save();
 		});

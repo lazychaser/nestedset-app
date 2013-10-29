@@ -24,13 +24,6 @@ class PagesController extends BaseController {
 	{
 		$this->page = $page;
 		$this->markdown = $markdown;
-
-		$me = $this;
-
-		$this->beforeFilter(function () use($me) {
-			$me->setupLayout();
-		}, 
-		array('except' => array('store', 'update', 'destroy')));
 	}
 
 	/**
@@ -40,6 +33,8 @@ class PagesController extends BaseController {
 	 */
 	public function index()
 	{
+		$this->setupLayout();
+
 		$pages = $this->page->withDepth()->get();
 
         return $this->layout
@@ -54,6 +49,8 @@ class PagesController extends BaseController {
 	 */
 	public function create()
 	{
+		$this->setupLayout();
+
 		$parents = $this->getParents();
 
         return $this->layout
@@ -68,34 +65,24 @@ class PagesController extends BaseController {
 	 */
 	public function store()
 	{
-		$data = $this->getData();
+		$data = $this->page->preprocessData(Input::all());
 
 		$page = new Page;
 		$page->fill($data);
 
 		if (($messages = $page->validate()) === true)
 		{
-			if ($page->save())
+			if ($this->saveSafely($page))
 			{
 				return Redirect::route('pages.index')->withSuccess('The page has been created!');
 			}
 
 			return Redirect::route('pages.create')
-				->withError('Something went wrong trying to save page.')
+				->withError('Something went wrong saving the page.')
 				->withInput($data);
 		}
 
 		return Redirect::route('pages.create')->withInput($data)->withErrors($messages);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
 	}
 
 	/**
@@ -106,11 +93,13 @@ class PagesController extends BaseController {
 	 */
 	public function edit($id)
 	{
+		$this->setupLayout();
+
 		$page = $this->page->findOrFail($id);
 		$parents = $this->getParents();
 
         return $this->layout
-        	->withTitle('Update page')
+        	->withTitle('Update '.$page->title)
         	->nest('content', 'pages.edit', compact('page', 'parents'));
 	}
 
@@ -124,13 +113,13 @@ class PagesController extends BaseController {
 	{
 		$page = $this->page->findOrFail($id);
 
-		$data = $this->getData();
+		$data = $this->page->preprocessData(Input::all());
 
 		$page->fill($data);
 
 		if (($messages = $page->validate()) === true)
 		{
-			if ($page->save())
+			if ($this->saveSafely($page))
 			{
 				$response = Input::has('save') 
 					? Redirect::route('pages.index')
@@ -149,6 +138,31 @@ class PagesController extends BaseController {
 	}
 
 	/**
+	 * Display destroy confirmation.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function confirm($id)
+	{
+		$this->setupLayout();
+
+		$page = $this->page->findOrFail($id);
+
+		$message = "Are you shure to destroy {$page->title}?";
+
+		if ($page->getDescendantCount())
+		{
+			$message .= " All descendants will also be destroyed!";
+		}
+
+		return $this->layout
+			->withTitle('Confirm destroy')
+			->nest('content', 'pages.confirm', compact('message', 'page'));
+	}
+
+	/**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
@@ -158,22 +172,108 @@ class PagesController extends BaseController {
 	{
 		$page = $this->page->findOrFail($id);
 
-		$response = Redirect::route('pages.index');
-
-		if ($page->delete()) 
+		return $page->getConnection()->transaction(function () use ($page)
 		{
-			Cache::flush();
+			$response = Redirect::route('pages.index');
 
-			$response->withSuccess('The page has been removed!');
-		}
-		else
-		{
-			$response->withWarning('The page was not removed.');
-		}
+			if ($page->delete()) 
+			{
+				$response->withSuccess('The page has been destroyed!');
+			}
+			else
+			{
+				$response->withWarning('The page was not destroyed.');
+			}
 
-		return $response;
+			return $response;
+		});
 	}
 
+	/**
+	 * Move the specified page up.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function up($id)
+	{
+		return $this->move($id, 'before');
+	}
+
+	/**
+	 * Move the specified page down.
+	 *
+	 * @param  int $id
+	 *
+	 * @return Response
+	 */
+	public function down($id)
+	{
+		return $this->move($id, 'after');
+	}
+
+	/**
+	 * Move the page.
+	 *
+	 * @param  int $id
+	 * @param  'before'|'after' $direction
+	 *
+	 * @return Response
+	 */
+	protected function move($id, $direction)
+	{
+		$page = $this->page->findOrFail($id);
+		$response = Redirect::route('pages.index');
+
+		if (!$page->isRoot())
+		{
+			$sibling = $direction === 'before' 
+				? $page->getPrevSibling()
+				: $page->getNextSibling();
+
+			if ($sibling)
+			{
+				$page->$direction($sibling);
+
+				if ($this->saveSafely($page))
+				{
+					return $response->withSuccess('The page has been successfully moved!');
+				}
+
+				return $response->withError('Failed to save the page while moving.');
+			}
+		}
+
+		return $response->withWarning('The page did not move.');
+	}
+
+	/**
+	 * Export pages.
+	 *
+	 * @return Response
+	 */
+	public function export()
+	{
+		$exporter = App::make('PagesExporter');
+		$path = storage_path('tmp/pages.tmp');
+
+		if ($exporter->export($path))
+		{
+			$headers = array('Content-Type' => $exporter->getMimeType());
+			$fileName = 'pages.'.$exporter->getExtension();
+
+			return Response::download($path, $fileName, $headers);
+		}
+
+		return Redirect::route('pages.index')->withError('Failed to export pages.');
+	}
+
+	/**
+	 * Get all available nodes as a list for HTML::select.
+	 *
+	 * @return array
+	 */
 	protected function getParents()
 	{
 		$all = $this->page->select('id', 'title')->withDepth()->get();
@@ -191,12 +291,20 @@ class PagesController extends BaseController {
 		return $result;
 	}
 
-	protected function getData()
+	/**
+	 * Save model in transaction.
+	 *
+	 * @param  Page $model
+	 *
+	 * @return boolean
+	 */
+	protected function saveSafely(Page $model)
 	{
-		$data = Input::all();
+		$connection = $model->getConnection();
 
-		if (isset($data['slug'])) $data['slug'] = strtolower($data['slug']);
-
-		return $data;
+		return $connection->transaction(function () use($model) 
+		{
+			return $model->save();
+		});
 	}
 }

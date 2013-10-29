@@ -85,4 +85,4 @@ require app_path().'/filters.php';
 /**
  * Require some HTML macros
  */
-require app_path().'/html_macros.php';
+require app_path().'/macros.php';

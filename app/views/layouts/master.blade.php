@@ -4,7 +4,7 @@
     <title>{{{ $title }}}</title>
 @section('head')
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.1.css') }}">
 @show
 </head>
 <body>

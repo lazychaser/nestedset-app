@@ -1,30 +1,70 @@
 <?php
 
 class Page extends \Kalnoy\Nestedset\Node {
+
 	protected $fillable = array('slug', 'title', 'body', 'parent_id');
-    
-	public static $rules = array(
-        'title'       => 'required',
-        'slug'        => 'required|regex:/^[a-z0-9\-\/]+$/',
-        'body'        => 'required',
-        'parent_id'   => 'required|exists:pages',
-    );
 
-    public function validate()
+    /**
+     * Apply some processing for an input.
+     *
+     * @param  array  $data
+     *
+     * @return array
+     */
+    public function preprocessData(array $data)
     {
-        $rules = self::$rules;
+        if (isset($data['slug'])) $data['slug'] = strtolower($data['slug']);
 
-        if ($this->isRoot()) unset($rules['parent_id']);
-
-        $validator = Validator::make($this->attributes, $rules);
-
-        return $validator->fails() ? $validator->messages() : true;
+        return $data;
     }
 
+    /**
+     * Perform validation.
+     *
+     * @return \Illuminate\Support\MessageBag|true
+     */
+    public function validate()
+    {
+        $v = Validator::make($this->attributes, $this->getRules());
+
+        return $v->fails() ? $v->messages() : true;
+    }
+
+    /**
+     * Get validation rules.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        $rules = array(
+            'title' => 'required',
+            
+            'slug'  => array(
+                'required',
+                'regex:/^[a-z0-9\-\/]+$/',
+                'unique:pages'.($this->exists ? ',slug,'.$this->id : ''),
+            ),
+
+            'body'  => 'required',
+        );
+
+        if ($this->exists && $this->isRoot())
+        {
+            $rules['parent_id'] = 'required|exists:pages,id';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get the contents.
+     *
+     * @return \Kalnoy\Nestedset\Collection
+     */
     public function getContents()
     {
-        Debugbar::startMeasure(__FUNCTION__);
-
+        // The source of contents is the top page not including the root.
         $source = $this->parent_id == 1 
             ? $this 
             : $this->ancestors()->withoutRoot()->first();
@@ -35,39 +75,41 @@ class Page extends \Kalnoy\Nestedset\Node {
             ->get()
             ->toTree();
 
-        Debugbar::stopMeasure(__FUNCTION__);
-
         return $contents;
     }
 
+    /**
+     * Get the page that is immediately after current page.
+     * 
+     * @param array $columns 
+     * 
+     * @return Page|null
+     */
     public function getNext(array $columns = array('slug', 'title'))
     {
-        Debugbar::startMeasure(__FUNCTION__);
-
-        $result = $this->newQuery()
+        $result = $this->next()
             ->select($columns)
-            ->where(static::LFT, '>', $this->_lft)
             ->where('parent_id', '<>', 1)
             ->first();
-
-        Debugbar::stopMeasure(__FUNCTION__);
 
         return $result;
     }
 
+    /**
+     * Get the page that is immediately before current page.
+     * 
+     * @param array $columns 
+     * 
+     * @return Page|null
+     */
     public function getPrev(array $columns = array('slug', 'title'))           
     {
         if ($this->isRoot() || $this->parent_id == 1) return null;
 
-        Debugbar::startMeasure(__FUNCTION__);
-
-        $result = $this->newQuery()
+        $result = $this->prev()
             ->select($columns)
             ->where(static::LFT, '<', $this->_lft)
-            ->reversed()
             ->first();
-
-        Debugbar::stopMeasure(__FUNCTION__);
 
         return $result;
     }

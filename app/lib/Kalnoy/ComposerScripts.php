@@ -32,12 +32,13 @@ class ComposerScripts {
         {
             self::generateIdeHelper();
 
-            shell_exec("php artisan debugbar:publish");
+            passthru("php artisan debugbar:publish");
         }
         else
         {
             self::cleanup();
         }
+
     }
 
     /**
@@ -47,7 +48,7 @@ class ComposerScripts {
      */
     protected static function generateIdeHelper()
     {
-        shell_exec("php artisan ide-helper:generate -M");
+        passthru("php artisan ide-helper:generate -M");
     }
 
     /**

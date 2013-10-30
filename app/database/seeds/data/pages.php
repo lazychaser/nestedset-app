@@ -1,7 +1,7 @@
 <?php return array (
   0 => 
   array (
-    'id' => 1,
+    'id' => '1',
     'slug' => '/',
     'title' => 'Index',
     'body' => '<div class="jumbotron">
@@ -15,13 +15,13 @@
 </div>',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 10:05:54',
-    '_lft' => 1,
-    '_rgt' => 26,
+    '_lft' => '1',
+    '_rgt' => '26',
     'parent_id' => NULL,
   ),
   1 => 
   array (
-    'id' => 2,
+    'id' => '2',
     'slug' => 'docs',
     'title' => 'Documentation',
     'body' => 'Say hi to Laravel 4 extension that will allow to create and manage hierarchies in
@@ -32,14 +32,14 @@ your database out-of-box. You can:
     descendants and ancestors;
 *   Forget about performance issues!',
     'created_at' => '0000-00-00 00:00:00',
-    'updated_at' => '2013-10-18 12:26:30',
-    '_lft' => 2,
-    '_rgt' => 21,
-    'parent_id' => 1,
+    'updated_at' => '2013-10-30 20:03:09',
+    '_lft' => '2',
+    '_rgt' => '21',
+    'parent_id' => '1',
   ),
   2 => 
   array (
-    'id' => 3,
+    'id' => '3',
     'slug' => 'docs/installation',
     'title' => 'Installation',
     'body' => 'The package can be installed using Composer, just include it into `required` 
@@ -52,13 +52,13 @@ section of your `composer.json` file:
 Hit `composer update` in the terminal, and you are ready to go next!',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 12:26:34',
-    '_lft' => 3,
-    '_rgt' => 4,
-    'parent_id' => 2,
+    '_lft' => '3',
+    '_rgt' => '4',
+    'parent_id' => '2',
   ),
   3 => 
   array (
-    'id' => 4,
+    'id' => '4',
     'slug' => 'docs/basic-usage',
     'title' => 'Basic usage',
     'body' => '### Schema
@@ -196,38 +196,38 @@ might be broken. To avoid such situations, each call of `save()` has to be enclo
 in the transaction.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 12:26:36',
-    '_lft' => 5,
-    '_rgt' => 6,
-    'parent_id' => 2,
+    '_lft' => '5',
+    '_rgt' => '6',
+    'parent_id' => '2',
   ),
   4 => 
   array (
-    'id' => 7,
+    'id' => '7',
     'slug' => 'docs/advanced',
     'title' => 'Advanced usage',
     'body' => 'In this section some features described in detail.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-19 07:20:12',
-    '_lft' => 7,
-    '_rgt' => 14,
-    'parent_id' => 2,
+    '_lft' => '7',
+    '_rgt' => '14',
+    'parent_id' => '2',
   ),
   5 => 
   array (
-    'id' => 8,
+    'id' => '8',
     'slug' => 'docs/advanced/default-order',
     'title' => 'Default order',
     'body' => 'Nodes are ordered by lft column unless there is `limit` or `offset` is provided,
 or when user uses `orderBy`.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 12:26:40',
-    '_lft' => 8,
-    '_rgt' => 9,
-    'parent_id' => 7,
+    '_lft' => '8',
+    '_rgt' => '9',
+    'parent_id' => '7',
   ),
   6 => 
   array (
-    'id' => 9,
+    'id' => '9',
     'slug' => 'docs/advanced/custom-collection',
     'title' => 'Custom collection',
     'body' => 'This package also provides custom collection, which has two additional functions:
@@ -273,13 +273,13 @@ Active children of soft deleted nodes will inevitably show up in query results,
 which is not desired in most situations.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 12:26:42',
-    '_lft' => 10,
-    '_rgt' => 11,
-    'parent_id' => 7,
+    '_lft' => '10',
+    '_rgt' => '11',
+    'parent_id' => '7',
   ),
   7 => 
   array (
-    'id' => 10,
+    'id' => '10',
     'slug' => 'docs/advanced/multiple-node-insertion',
     'title' => 'Multiple node insertion',
     'body' => '_DO NOT MAKE MULTIPLE INSERTIONS DURING SINGLE HTTP REQUEST_
@@ -314,25 +314,25 @@ _THIS IS THE ONLY CASE WHEN MULTIPLE NODES CAN BE INSERTED AND/OR RE-INSERTED
 DURING SINGLE HTTP REQUEST WITHOUT REFRESHING DATA_',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-18 12:26:44',
-    '_lft' => 12,
-    '_rgt' => 13,
-    'parent_id' => 7,
+    '_lft' => '12',
+    '_rgt' => '13',
+    'parent_id' => '7',
   ),
   8 => 
   array (
-    'id' => 5,
+    'id' => '5',
     'slug' => 'docs/how-tos',
     'title' => 'How-to\'s',
     'body' => 'This section contains basic recipes for different applications.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-19 07:22:20',
-    '_lft' => 15,
-    '_rgt' => 20,
-    'parent_id' => 2,
+    '_lft' => '15',
+    '_rgt' => '20',
+    'parent_id' => '2',
   ),
   9 => 
   array (
-    'id' => 6,
+    'id' => '6',
     'slug' => 'docs/how-tos/moving-nodes-up-and-down',
     'title' => 'Moving nodes up and down',
     'body' => 'Sometimes there is need to move nodes around while remaining in boundaries of 
@@ -358,13 +358,13 @@ since all nodes are ordered by fixed values. We apply `reversed()` scope to reve
 default order.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '2013-10-15 20:47:51',
-    '_lft' => 16,
-    '_rgt' => 17,
-    'parent_id' => 5,
+    '_lft' => '16',
+    '_rgt' => '17',
+    'parent_id' => '5',
   ),
   10 => 
   array (
-    'id' => 15,
+    'id' => '15',
     'slug' => 'docs/how-tos/documentation-navigation',
     'title' => 'Documentation navigation: next & prev',
     'body' => 'Navigating through such resources as documentation, tutorials or articles is simplified when in the end of each section there is a link to the next. This is especially helpful for navigating documentation since it is usually consists of many sections that have other sub sections. While you are inside one section you want to have link to the next article in that section but once you are at the end of the section you would probably want to get link to the introduction of the next section.
@@ -372,36 +372,41 @@ default order.',
 This is extremely easy when using nested sets. The next article is simply the node that follows immediately after current. The same is for the previous article. In database it\'s the first node lft column value of which is larger than current node\'s lft value:
 
     $nextNode = $node->where($node->getLftName(), \'>\', $node->getLft())->first();
-    $prevNode = $node->where($node->getLftName(), \'<\', $node->getLft())->reversed()->first();',
+    $prevNode = $node->where($node->getLftName(), \'<\', $node->getLft())->reversed()->first();
+
+This can be rewritten to use default implementation:
+
+    $nextNode = $node->getNext(); // == $node->next()->first();
+    $prevNode = $node->getPrev(); // == $node->prev()->first();',
     'created_at' => '2013-10-19 07:39:02',
-    'updated_at' => '2013-10-19 07:39:31',
-    '_lft' => 18,
-    '_rgt' => 19,
-    'parent_id' => 5,
+    'updated_at' => '2013-10-30 19:55:18',
+    '_lft' => '18',
+    '_rgt' => '19',
+    'parent_id' => '5',
   ),
   11 => 
   array (
-    'id' => 12,
+    'id' => '12',
     'slug' => 'resources',
     'title' => 'Resources',
     'body' => '* [Laravel 4 NestedSet](http://github.com/lazychaser/laravel4-nestedset)
-* [This app project](http://github.com/lazychaser/nestedset-app)',
+* [This application\'s GitHub repository](http://github.com/lazychaser/nestedset-app)',
     'created_at' => '2013-10-15 16:44:00',
-    'updated_at' => '2013-10-18 12:14:01',
-    '_lft' => 22,
-    '_rgt' => 23,
-    'parent_id' => 1,
+    'updated_at' => '2013-10-30 20:04:58',
+    '_lft' => '22',
+    '_rgt' => '23',
+    'parent_id' => '1',
   ),
   12 => 
   array (
-    'id' => 11,
+    'id' => '11',
     'slug' => 'about',
     'title' => 'About',
     'body' => 'This is general about page.',
     'created_at' => '0000-00-00 00:00:00',
     'updated_at' => '0000-00-00 00:00:00',
-    '_lft' => 24,
-    '_rgt' => 25,
-    'parent_id' => 1,
+    '_lft' => '24',
+    '_rgt' => '25',
+    'parent_id' => '1',
   ),
 );

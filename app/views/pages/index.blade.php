@@ -13,16 +13,20 @@
 @if (count($pages))
     @foreach ($pages as $item)
         <tr class="item">
-            <td>{{ $item->id }}</td>
+            <td class="f-id">{{ $item->id }}</td>
+
             <td class="f-title">
                 {{ str_repeat('<span class="space"></span>', $item->depth) }}<a href="{{ route('pages.edit', array('pages' => $item->id)) }}">{{{ $item->title}}}{{ HTML::glyphicon('edit') }}</a>
             </td>
-            <td>
+
+            <td class="f-slug">
             @if ($item->slug)
-                <a href="{{ route('page', array('slug' => $item->slug)) }}" target="_blanc">{{ $item->slug }}</a>
+                <a href="{{ route('page', array('slug' => $item->slug)) }}" target="_blank">{{ $item->slug }}</a>
             @endif
             </td>
+
             <td class="f-date">{{ $item->updated_at }}</td>
+
             <td class="f-actions">
             @if ($item->isRoot())
                 <a href="{{ URL::route('pages.export') }}" class="btn btn-xs">{{ HTML::glyphicon('floppy-save') }} export</a>

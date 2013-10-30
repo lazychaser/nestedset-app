@@ -14,6 +14,7 @@
 @section('content')
     <h1>{{{ $title }}}</h1>
 
+    {{-- Display some alerts --}}
     @foreach (array('error', 'warning', 'success') as $key)
         @if (Session::has($key))
     <div class="alert alert-dismissable alert-{{ $key === 'error' ? 'danger' : $key }}">

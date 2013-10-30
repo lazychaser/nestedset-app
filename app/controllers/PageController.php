@@ -82,7 +82,7 @@ class PageController extends BaseController {
 	/**
 	 * Get breadcrumbs to the current page.
 	 *
-	 * $active is last crumb (the page title by default).	
+	 * $active is the last crumb (the page title by default).	
 	 *
 	 * @param   Page    $page
 	 * @param   string  $active
@@ -94,10 +94,11 @@ class PageController extends BaseController {
 	{
 		if ($page->isRoot()) return array();
 
-		Debugbar::startMeasure('breadcrumbs');
-
 		$breadcrumbs['Index'] = url('/');
-		$ancestors = $page->ancestors()->select('id', 'title', 'slug')->withoutRoot()->get();
+		$ancestors = $page
+			->ancestors()
+			->withoutRoot()
+			->get(array('id', 'title', 'slug'));
 
 		if ($active !== null) $ancestors->push($page);
 
@@ -107,8 +108,6 @@ class PageController extends BaseController {
 		}
 
 		$breadcrumbs[] = $active !== null ? $active : $page->title;
-
-		Debugbar::stopMeasure('breadcrumbs');
 
 		return $breadcrumbs;
 	}
@@ -120,17 +119,12 @@ class PageController extends BaseController {
 	 */
 	protected function getMenu(Page $activePage)
 	{
-		Debugbar::startMeasure('menu');
-
-		$items = $this->page
+		$itemTree = $this->page
 			->select('id', 'slug', 'title', '_lft', 'parent_id')
 			->where('parent_id', '=', 1)
-			->get();
+			->get()
+			->toTree();
 
-		$items = make_nav($items->toTree(), $activePage->getKey());
-
-		Debugbar::stopMeasure('menu');
-
-		return $items;
+		return make_nav($itemTree, $activePage->getKey());
 	}
 }

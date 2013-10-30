@@ -10,7 +10,11 @@
     <div class="col-lg-10">
         <div class="input-group">
             <span class="input-group-addon">{{ Request::root().'/' }}</span>
-            {{ Form::text('slug', null, array('class' => 'form-control', 'required' => true)) }}
+            {{ Form::text('slug', null, array(
+                'class' => 'form-control', 
+                'required' => true,
+                'pattern' => '^'.Page::$slugPattern.'$',
+            )) }}
         </div>
         <span class="help-block">This one accepts only letters, numbers, dash and slash, i.e. "docs/installation".</span>
     </div>
@@ -20,7 +24,9 @@
     {{ Form::label('body', 'Body', array('class' => 'col-lg-2 control-label')) }}
     <div class="col-lg-10">
         {{ Form::textarea('body', null, array('class' => 'form-control', 'required' => true)) }}
-        <span class="help-block">Supports <a href="http://daringfireball.net/projects/markdown/" target="_blank">markdown</a> syntax.</span>
+        <span class="help-block">
+            Supports <a href="http://daringfireball.net/projects/markdown/" target="_blank">markdown</a> syntax.
+        </span>
     </div>
 {{ Form::endGroup('body') }}
 

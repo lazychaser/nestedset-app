@@ -17,11 +17,11 @@
 @if (isset($prev) || isset($next))
         <ul class="pager">
     @if (isset($prev))
-            <li class="previous"><a href="{{ route('page', array('slug' => $prev->slug)) }}">&larr; {{{ $prev->title }}}</a></li>
+            <li class="previous"><a href="{{ route('page', array($prev->slug)) }}">&larr; {{{ $prev->title }}}</a></li>
     @endif
 
     @if (isset($next))
-            <li class="next"><a href="{{ route('page', array('slug' => $next->slug)) }}">{{{ $next->title }}} &rarr;</a></li>
+            <li class="next"><a href="{{ route('page', array($next->slug)) }}">{{{ $next->title }}} &rarr;</a></li>
     @endif
         </ul>
 @endif

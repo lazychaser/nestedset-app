@@ -6,8 +6,14 @@ It uses almost all features of the package. The layout is based on
 It is not intended to be used in production due to incomplete browsers support
 and other issues.
 
-After the application is downloaded and configured, run following command to set 
-up the database:
+[1]: http://github.com/lazychaser/laravel4-nestedset
+[2]: http://getbootstrap.com
+
+## Installation
+
+To install this application you need to clone this repository and run 
+`composer update`. After this you need to configure database, and run following 
+command to set it up:
 
 ```
 php artisan migrate --seed
@@ -15,6 +21,3 @@ php artisan migrate --seed
 
 Note that this application uses latest _dev_ versions of Laravel 4 and NestedSet 
 packages.
-
-[1]: http://github.com/lazychaser/laravel4-nestedset
-[2]: http://getbootstrap.com

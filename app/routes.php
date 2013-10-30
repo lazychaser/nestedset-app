@@ -40,4 +40,4 @@ Route::group(array('prefix' => 'pages'), function () {
 // The slug route should be registered last since it will capture any slug-like
 // route
 Route::get('{slug}', array('as' => 'page', 'uses' => 'PageController@show'))
-    ->where('slug', '[a-z0-9\-\/]+');
+    ->where('slug', Page::$slugPattern);

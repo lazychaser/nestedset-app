@@ -2,6 +2,13 @@
 
 class Page extends \Kalnoy\Nestedset\Node {
 
+    /**
+     * The set of characters for testing slugs. 
+     *
+     * @var  string
+     */
+    public static $slugPattern = '[a-z0-9\-/]+';
+
 	protected $fillable = array('slug', 'title', 'body', 'parent_id');
 
     /**
@@ -42,7 +49,7 @@ class Page extends \Kalnoy\Nestedset\Node {
             
             'slug'  => array(
                 'required',
-                'regex:/^[a-z0-9\-\/]+$/',
+                'regex:#^'.self::$slugPattern.'$#',
                 'unique:pages'.($this->exists ? ',slug,'.$this->id : ''),
             ),
 
@@ -79,39 +86,33 @@ class Page extends \Kalnoy\Nestedset\Node {
     }
 
     /**
-     * Get the page that is immediately after current page.
+     * Get the page that is immediately after current page following the contents.
      * 
      * @param array $columns 
      * 
      * @return Page|null
      */
-    public function getNext(array $columns = array('slug', 'title'))
+    public function getNext(array $columns = array('slug', 'title', 'parent_id'))
     {
-        $result = $this->next()
-            ->select($columns)
-            ->where('parent_id', '<>', 1)
-            ->first();
+        $result = parent::getNext($columns);
 
-        return $result;
+        return $result && $result->parent_id == 1 ? null : $result;
     }
 
     /**
-     * Get the page that is immediately before current page.
+     * Get the page that is immediately before current page following the contents.
      * 
      * @param array $columns 
      * 
      * @return Page|null
      */
-    public function getPrev(array $columns = array('slug', 'title'))           
+    public function getPrev(array $columns = array('slug', 'title', 'parent_id'))           
     {
         if ($this->isRoot() || $this->parent_id == 1) return null;
 
-        $result = $this->prev()
-            ->select($columns)
-            ->where(static::LFT, '<', $this->_lft)
-            ->first();
+        $result = parent::getPrev($columns);
 
-        return $result;
+        return $result && $result->parent_id == 1 ? null : $result;
     }
 
     /**

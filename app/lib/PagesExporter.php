@@ -28,7 +28,7 @@ class PagesExporter {
     }
 
     /**
-     * Export pages into specified file.
+     * Export pages into specified file as a php array.
      *
      * @param  string $path
      *

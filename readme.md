@@ -12,7 +12,7 @@ and other issues.
 ## Installation
 
 To install this application you need to clone this repository and run 
-`composer update`. After this you need to configure database, and run following 
+`composer install`. After this you need to configure a database, and run following 
 command to set it up:
 
 ```

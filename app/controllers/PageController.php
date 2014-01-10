@@ -7,13 +7,13 @@ use dflydev\markdown\MarkdownParser;
  */
 class PageController extends BaseController {
 
-	public $layout = 'layouts.front';
+	protected $layout = 'layouts.front';
 
 	/**
 	 * The page storage.
 	 *
 	 * @var  Page
-	 */	
+	 */
 	protected $page;
 
 	/**
@@ -27,8 +27,6 @@ class PageController extends BaseController {
 	{
 		$this->page = $page;
 		$this->markdown = $markdown;
-
-		$this->setupLayout();
 	}
 
 	/**
@@ -47,42 +45,31 @@ class PageController extends BaseController {
 			App::abort(404, 'Sorry, but requested page doesn\'t exists.');
 		}
 
-		return $this->displayPage($page, $slug == '/' ? 'home.index' : 'home.page');
-	}
+        $page->body = $this->markdown->transformMarkdown($page->body);
 
-	/**
-	 * Get view of specified page.
-	 *
-	 * @param   Page    $page
-	 *
-	 * @return  \Illuminate\View\View
-	 */
-	protected function displayPage(Page $page, $view = 'home.page')
-	{
-		$page->body = $this->markdown->transformMarkdown($page->body);
+        $content = View::make($slug == '/' ? 'home.index' : 'home.page', compact('page'));
 
-		$content = View::make($view, compact('page'));
+        if (!$page->isRoot())
+        {
+            $content->with(array(
+                'contents' => make_nav($page->getContents(), $page->getKey()),
+                'next' => $page->getNext(),
+                'prev' => $page->getPrev(),
+            ));
+        }
 
-		if (!$page->isRoot())
-		{
-			$content->with(array(
-				'contents' => make_nav($page->getContents(), $page->getKey()),
-				'next' => $page->getNext(),
-				'prev' => $page->getPrev(),
-			));
-		}
-
-        return $this->layout
-        	->withTitle($page->title)
-        	->withBreadcrumbs($this->getBreadcrumbs($page))
-        	->withMenu($this->getMenu($page))
-        	->withContent($content);
+        $this->layout->with(array(
+            'title' => $page->title,
+            'breadcrumbs' => $this->getBreadcrumbs($page),
+            'menu' => $this->getMenu($page),
+            'content' => $content,
+        ));
 	}
 
 	/**
 	 * Get breadcrumbs to the current page.
 	 *
-	 * $active is the last crumb (the page title by default).	
+	 * $active is the last crumb (the page title by default).
 	 *
 	 * @param   Page    $page
 	 * @param   string  $active
@@ -102,7 +89,7 @@ class PageController extends BaseController {
 
 		if ($active !== null) $ancestors->push($page);
 
-		foreach ($ancestors as $item) 
+		foreach ($ancestors as $item)
 		{
 			$breadcrumbs[$item->title] = route($route, array($item->slug));
 		}
@@ -112,11 +99,13 @@ class PageController extends BaseController {
 		return $breadcrumbs;
 	}
 
-	/**
-	 * Get main menu items.
-	 *
-	 * @return  array
-	 */
+    /**
+     * Get main menu items.
+     *
+     * @param Page $activePage
+     *
+     * @return array
+     */
 	protected function getMenu(Page $activePage)
 	{
 		$itemTree = $this->page

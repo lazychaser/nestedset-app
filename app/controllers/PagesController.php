@@ -10,7 +10,7 @@ class PagesController extends BaseController {
 	 * The page storage.
 	 *
 	 * @var  Page
-	 */	
+	 */
 	protected $page;
 
 	public function __construct(Page $page)
@@ -25,11 +25,9 @@ class PagesController extends BaseController {
 	 */
 	public function index()
 	{
-		$this->setupLayout();
-
 		$pages = $this->page->withDepth()->get();
 
-        return $this->layout
+        $this->layout
         	->withTitle('Manage Pages')
         	->nest('content', 'pages.index', compact('pages'));
 	}
@@ -41,11 +39,9 @@ class PagesController extends BaseController {
 	 */
 	public function create()
 	{
-		$this->setupLayout();
-
 		$parents = $this->getParents();
 
-        return $this->layout
+        $this->layout
         	->withTitle('Create a page')
         	->nest('content', 'pages.create', compact('parents'));
 	}
@@ -85,12 +81,10 @@ class PagesController extends BaseController {
 	 */
 	public function edit($id)
 	{
-		$this->setupLayout();
-
 		$page = $this->page->findOrFail($id);
 		$parents = $this->getParents();
 
-        return $this->layout
+        $this->layout
         	->withTitle('Update '.$page->title)
         	->nest('content', 'pages.edit', compact('page', 'parents'));
 	}
@@ -113,7 +107,7 @@ class PagesController extends BaseController {
 		{
 			if ($this->saveSafely($page))
 			{
-				$response = Input::has('save') 
+				$response = Input::has('save')
 					? Redirect::route('pages.index')
 					: Redirect::route('pages.edit', array($id));
 
@@ -138,8 +132,6 @@ class PagesController extends BaseController {
 	 */
 	public function confirm($id)
 	{
-		$this->setupLayout();
-
 		$page = $this->page->findOrFail($id);
 
 		$message = "Are you shure to destroy {$page->title}?";
@@ -149,7 +141,7 @@ class PagesController extends BaseController {
 			$message .= " All descendants will also be destroyed!";
 		}
 
-		return $this->layout
+		$this->layout
 			->withTitle('Confirm destroy')
 			->nest('content', 'pages.confirm', compact('message', 'page'));
 	}
@@ -168,7 +160,7 @@ class PagesController extends BaseController {
 		{
 			$response = Redirect::route('pages.index');
 
-			if ($page->delete()) 
+			if ($page->delete())
 			{
 				$response->withSuccess('The page has been destroyed!');
 			}
@@ -269,7 +261,7 @@ class PagesController extends BaseController {
 		$all = $this->page->select('id', 'title')->withDepth()->get();
 		$result = array();
 
-		foreach ($all as $item) 
+		foreach ($all as $item)
 		{
 			$title = $item->title;
 
@@ -292,7 +284,7 @@ class PagesController extends BaseController {
 	{
 		$connection = $model->getConnection();
 
-		return $connection->transaction(function () use ($model) 
+		return $connection->transaction(function () use ($model)
 		{
 			return $model->save();
 		});

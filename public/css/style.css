@@ -42,17 +42,20 @@ body {
 }
 
 .page-list .f-title { width: 30%; }
-.page-list .f-title .glyphicon { 
-    margin-left: 5px; 
+.page-list .f-title .glyphicon {
+    margin-left: 5px;
     text-decoration: none;
     font-size: 12px;
 }
 
-.page-list .f-date,
-.page-list .f-actions {
+.page-list .f-date {
     text-align: center;
     white-space: nowrap;
     width: 1%;
+}
+
+.page-list .f-actions {
+    width: 100px;
 }
 
 .page-list .f-date {

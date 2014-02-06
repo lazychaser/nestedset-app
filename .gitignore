@@ -1,6 +1,7 @@
 /bootstrap/compiled.php
 /vendor
 /public/packages
+/.idea
 !/public/packages/.gitkeep
 /app/config/local
 composer.phar

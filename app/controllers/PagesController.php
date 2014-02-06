@@ -101,7 +101,16 @@ class PagesController extends BaseController {
 
 		$data = $this->page->preprocessData(Input::all());
 
-		$page->fill($data);
+		try
+		{
+			$page->fill($data);
+		}
+		catch (Exception $e)
+		{
+			return Redirect::route('pages.edit', array($id))
+				->withInput()
+				->withError($e->getMessage());
+		}
 
 		if (($messages = $page->validate()) === true)
 		{
@@ -115,6 +124,7 @@ class PagesController extends BaseController {
 			}
 
 			return Redirect::route('pages.edit', array($id))
+				->withInput()
 				->withError('Could not save the page.');
 		}
 

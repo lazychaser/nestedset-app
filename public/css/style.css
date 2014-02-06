@@ -77,3 +77,7 @@ body {
     , .page-list .item:hover .f-title .glyphicon {
         opacity: 1;
     }
+
+.ace_editor {
+    height: 250px;
+}

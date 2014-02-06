@@ -16,7 +16,7 @@
             <td class="f-id">{{ $item->id }}</td>
 
             <td class="f-title">
-                {{ str_repeat('<span class="space"></span>', $item->depth) }}<a href="{{ route('pages.edit', array('pages' => $item->id)) }}">{{{ $item->title}}}{{ HTML::glyphicon('edit') }}</a>
+                {{ item_depth($item->depth) }}<a href="{{ route('pages.edit', array('pages' => $item->id)) }}">{{{ $item->title}}}{{ HTML::glyphicon('edit') }}</a>
             </td>
 
             <td class="f-slug">

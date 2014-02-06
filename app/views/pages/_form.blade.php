@@ -23,7 +23,7 @@
 {{ Form::beginGroup('body') }}
     {{ Form::label('body', 'Body', array('class' => 'col-lg-2 control-label')) }}
     <div class="col-lg-10">
-        {{ Form::textarea('body', null, array('class' => 'form-control', 'required' => true)) }}
+        {{ Form::hidden('body', null, array('class' => 'editor-value')) }}
         <span class="help-block">
             Supports <a href="http://daringfireball.net/projects/markdown/" target="_blank">markdown</a> syntax.
         </span>

@@ -27,3 +27,8 @@
 
     {{ $content }}
 @stop
+
+@section('footer')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.01/ace.js"></script>
+    <script src="/js/backend.js"></script>
+@stop

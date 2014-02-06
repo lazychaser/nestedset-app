@@ -114,10 +114,6 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
-		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
-		'Way\Generators\GeneratorsServiceProvider',
-		'Way\Console\GuardLaravelServiceProvider',
-		'Barryvdh\Debugbar\ServiceProvider',
 		
 	),
 
@@ -185,7 +181,6 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'NestedSet'		  => 'Kalnoy\Nestedset\NestedSet',
-		'Debugbar' 		  => 'Barryvdh\Debugbar\Facade',
 
 	),
 

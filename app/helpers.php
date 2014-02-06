@@ -40,3 +40,27 @@ function make_nav(Collection $tree, $activeItemKey = null, &$active = null)
 
     }, $tree->all());
 }
+
+/**
+ * Transform markdown to the HTML.
+ *
+ * @param string $text
+ *
+ * @return string
+ */
+function markdown($text)
+{
+    return Parsedown::instance()->parse($text);
+}
+
+/**
+ * Render spaces to represent item depth.
+ *
+ * @param int $depth
+ *
+ * @return string
+ */
+function item_depth($depth)
+{
+    return str_repeat('<span class="space"></span>', $depth);
+}

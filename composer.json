@@ -1,21 +1,20 @@
 {
-	"name": "kalnoy/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "kalnoy/nestedset-app",
+	"description": "The Nested Set app demo",
+	"keywords": ["nested sets", "laravel", "database"],
 	"license": "MIT",
+
 	"require": {
-		"laravel/framework": "4.1.*",
-		"way/generators": "dev-master",
-		"way/guard-laravel": "dev-master",
-		"barryvdh/laravel-ide-helper": "1.*",
-    	"barryvdh/laravel-debugbar": "dev-master",
-    	"kalnoy/nestedset": "dev-master",
-    	"dflydev/markdown": "1.0.*"
+		"laravel/framework": "~4.1.18",
+    	"kalnoy/nestedset": "~1.0",
+    	"erusev/parsedown": "~0.9.3"
 	},
+
     "require-dev": {
     	"phpunit/phpunit": "3.7.*",
-    	"mockery/mockery": "dev-master"
+    	"mockery/mockery": "~0.8.0"
 	},
+
 	"autoload": {
 		"classmap": [
 			"app/commands",
@@ -35,24 +34,26 @@
             "app/helpers.php"
         ]
 	},
+
 	"scripts": {
 		"post-install-cmd": [
-			"Kalnoy\\ComposerScripts::postInstall",
 			"php artisan optimize"
 		],
+
 		"pre-update-cmd": [
 			"php artisan clear-compiled"
 		],
+
 		"post-update-cmd": [
-			"Kalnoy\\ComposerScripts::postUpdate",
 			"php artisan optimize"
 		],
+
 		"post-create-project-cmd": [
 			"php artisan key:generate"
 		]
 	},
+
 	"config": {
 		"preferred-install": "dist"
-	},
-	"minimum-stability": "dev"
+	}
 }

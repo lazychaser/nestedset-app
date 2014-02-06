@@ -9,7 +9,8 @@
  * 
  * @return string
  */
-Form::macro('beginGroup', function ($name) {
+Form::macro('beginGroup', function ($name)
+{
     $errors = View::shared('errors');
 
     $class = 'form-group';
@@ -28,7 +29,8 @@ Form::macro('beginGroup', function ($name) {
  * 
  * @return string
  */
-Form::macro('endGroup', function ($name) {
+Form::macro('endGroup', function ($name)
+{
     $html = '</div>';
 
     $errors = View::shared('errors');
@@ -46,7 +48,8 @@ Form::macro('endGroup', function ($name) {
  * 
  * @param string $icon
  */
-HTML::macro('glyphicon', function ($icon) {
+HTML::macro('glyphicon', function ($icon)
+{
     return '<span class="glyphicon glyphicon-'.$icon.'"></span>';
 });
 
@@ -57,12 +60,14 @@ HTML::macro('glyphicon', function ($icon) {
  *
  * @return string
  */
-HTML::macro('nav', function($data) {
+HTML::macro('nav', function($data)
+{
     if (empty($data)) return '';
 
     $html = '<ul class="nav">';
 
-    foreach ($data as $item) {
+    foreach ($data as $item)
+    {
         $html .= '<li';
 
         if (isset($item['active']) && $item['active']) $html .= ' class="active"';

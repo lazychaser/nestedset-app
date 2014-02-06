@@ -1,7 +1,5 @@
 <?php
 
-use dflydev\markdown\MarkdownParser;
-
 /**
  * This controller is used to display pages.
  */
@@ -16,17 +14,9 @@ class PageController extends BaseController {
 	 */
 	protected $page;
 
-	/**
-	 * Markdown parser.
-	 *
-	 * @var dflydev\markdown\MarkdownParser;
-	 */
-	protected $markdown;
-
-	public function __construct(Page $page, MarkdownParser $markdown)
+	public function __construct(Page $page)
 	{
 		$this->page = $page;
-		$this->markdown = $markdown;
 	}
 
 	/**
@@ -45,25 +35,12 @@ class PageController extends BaseController {
 			App::abort(404, 'Sorry, but requested page doesn\'t exists.');
 		}
 
-        $page->body = $this->markdown->transformMarkdown($page->body);
+        $view = $page->isRoot() ? 'home.index' : 'home.page';
 
-        $content = View::make($slug == '/' ? 'home.index' : 'home.page', compact('page'));
-
-        if (!$page->isRoot())
-        {
-            $content->with(array(
-                'contents' => make_nav($page->getContents(), $page->getKey()),
-                'next' => $page->getNext(),
-                'prev' => $page->getPrev(),
-            ));
-        }
-
-        $this->layout->with(array(
-            'title' => $page->title,
-            'breadcrumbs' => $this->getBreadcrumbs($page),
-            'menu' => $this->getMenu($page),
-            'content' => $content,
-        ));
+        $this->layout->title = $page->title;
+        $this->layout->content = View::make($view, compact('page'));
+        $this->layout->menu = $this->getMenu($page);
+        $this->layout->breadcrumbs = $this->getBreadcrumbs($page);
 	}
 
 	/**

@@ -56,7 +56,7 @@ class Page extends \Kalnoy\Nestedset\Node {
             'body'  => 'required',
         );
 
-        if ($this->exists && $this->isRoot())
+        if ($this->exists && ! $this->isRoot())
         {
             $rules['parent_id'] = 'required|exists:pages,id';
         }

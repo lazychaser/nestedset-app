@@ -25,7 +25,7 @@ class PagesController extends BaseController {
 	 */
 	public function index()
 	{
-		$pages = $this->page->withDepth()->get();
+		$pages = $this->page->withDepth()->defaultOrder()->get();
 
         $this->layout
         	->withTitle('Manage Pages')
@@ -55,12 +55,11 @@ class PagesController extends BaseController {
 	{
 		$data = $this->page->preprocessData(Input::all());
 
-		$page = new Page;
-		$page->fill($data);
+		$page = new Page($data);
 
 		if (($messages = $page->validate()) === true)
 		{
-			if ($this->saveSafely($page))
+			if ($page->save())
 			{
 				return Redirect::route('pages.index')->withSuccess('The page has been created!');
 			}
@@ -114,7 +113,7 @@ class PagesController extends BaseController {
 
 		if (($messages = $page->validate()) === true)
 		{
-			if ($this->saveSafely($page))
+			if ($page->save())
 			{
 				$response = Input::has('save')
 					? Redirect::route('pages.index')
@@ -166,21 +165,18 @@ class PagesController extends BaseController {
 	{
 		$page = $this->page->findOrFail($id);
 
-		return $page->getConnection()->transaction(function () use ($page)
+		$response = Redirect::route('pages.index');
+
+		if ($page->delete())
 		{
-			$response = Redirect::route('pages.index');
+			$response->withSuccess('The page has been destroyed!');
+		}
+		else
+		{
+			$response->withWarning('The page was not destroyed.');
+		}
 
-			if ($page->delete())
-			{
-				$response->withSuccess('The page has been destroyed!');
-			}
-			else
-			{
-				$response->withWarning('The page was not destroyed.');
-			}
-
-			return $response;
-		});
+		return $response;
 	}
 
 	/**
@@ -220,20 +216,15 @@ class PagesController extends BaseController {
 		$page = $this->page->findOrFail($id);
 		$response = Redirect::route('pages.index');
 
-		if (!$page->isRoot())
+		$sibling = $dir === 'before' ? $page->getPrevSibling() : $page->getNextSibling();
+
+		if ($sibling)
 		{
-			$sibling = $dir === 'before' ? $page->getPrevSibling() : $page->getNextSibling();
+			$page->$dir($sibling)->save();
 
-			if ($sibling)
+			if ($page->hasMoved())
 			{
-				$page->$dir($sibling);
-
-				if ($this->saveSafely($page))
-				{
-					return $response->withSuccess('The page has been successfully moved!');
-				}
-
-				return $response->withError('Failed to save the page while moving.');
+				return $response->withSuccess('The page has been successfully moved!');
 			}
 		}
 
@@ -268,7 +259,7 @@ class PagesController extends BaseController {
 	 */
 	protected function getParents()
 	{
-		$all = $this->page->select('id', 'title')->withDepth()->get();
+		$all = $this->page->select('id', 'title')->withDepth()->defaultOrder()->get();
 		$result = array();
 
 		foreach ($all as $item)
@@ -281,22 +272,5 @@ class PagesController extends BaseController {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Save model in transaction.
-	 *
-	 * @param  Page $model
-	 *
-	 * @return boolean
-	 */
-	protected function saveSafely(Page $model)
-	{
-		$connection = $model->getConnection();
-
-		return $connection->transaction(function () use ($model)
-		{
-			return $model->save();
-		});
 	}
 }

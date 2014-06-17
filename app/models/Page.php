@@ -11,6 +11,8 @@ class Page extends \Kalnoy\Nestedset\Node {
 
 	protected $fillable = array('slug', 'title', 'body', 'parent_id');
 
+    protected $visible = array('title', 'slug', 'body', 'children');
+
     /**
      * Apply some processing for an input.
      *
@@ -78,8 +80,8 @@ class Page extends \Kalnoy\Nestedset\Node {
 
         $contents = $source
             ->descendants()
-            ->select('id', 'slug', 'title', static::LFT, 'parent_id')
-            ->get()
+            ->defaultOrder()
+            ->get([ 'id', 'slug', 'title', static::LFT, 'parent_id' ])
             ->toTree();
 
         return $contents;

@@ -36,13 +36,7 @@ class PagesExporter {
      */
     public function export($path)
     {
-        $pages = $this->pages->all();
-
-        $pages = array_map(function ($item) 
-        {
-            return $item->getAttributes();
-
-        }, $pages->all());
+        $pages = $this->pages->defaultOrder()->get()->toTree()->toArray();
 
         $contents = '<?php return '.var_export($pages, true).';';
 

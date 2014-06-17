@@ -86,9 +86,8 @@ class PageController extends BaseController {
 	protected function getMenu(Page $activePage)
 	{
 		$itemTree = $this->page
-			->select('id', 'slug', 'title', '_lft', 'parent_id')
 			->where('parent_id', '=', 1)
-			->get()
+			->get([ 'id', 'slug', 'title', '_lft', 'parent_id' ])
 			->toTree();
 
 		return make_nav($itemTree, $activePage->getKey());

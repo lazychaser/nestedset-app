@@ -9,3 +9,5 @@
     <button class="btn btn-primary" type="submit">Confirm</button>
     <a href="{{ URL::previous() }}" class="btn">Cancel</a>
 </p>
+
+{{ Form::close() }}
